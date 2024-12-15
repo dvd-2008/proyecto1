@@ -1,0 +1,75 @@
+-- Crear la base de datos
+CREATE DATABASE IF NOT EXISTS tienda_online;
+
+-- Usar la base de datos
+USE tienda_online;
+
+-- Crear la tabla clientes (solo datos relevantes)
+CREATE TABLE IF NOT EXISTS clientes (
+    id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    telefono VARCHAR(20)
+);
+
+-- Crear la tabla productos (solo datos relevantes)
+CREATE TABLE IF NOT EXISTS productos (
+    id_producto INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_producto VARCHAR(255) NOT NULL,
+    precio DECIMAL(10, 2) NOT NULL,
+    stock INT NOT NULL
+);
+
+-- Crear la tabla pedidos (solo datos relevantes)
+CREATE TABLE IF NOT EXISTS pedidos (
+    id_pedido INT AUTO_INCREMENT PRIMARY KEY,
+    id_cliente INT,
+    total DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente)
+);
+
+-- Crear la tabla detalles_pedido (solo datos relevantes)
+CREATE TABLE IF NOT EXISTS detalles_pedido (
+    id_detalle INT AUTO_INCREMENT PRIMARY KEY,
+    id_pedido INT,
+    id_producto INT,
+    cantidad INT NOT NULL,
+    precio_unitario DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (id_pedido) REFERENCES pedidos(id_pedido),
+    FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
+);
+
+-- Insertar datos en la tabla clientes
+INSERT INTO clientes (nombre, telefono)
+VALUES
+    ('Juan Pérez', '555-1234'),
+    ('Ana García', '555-5678'),
+    ('Luis Martínez', '555-9876');
+
+-- Insertar datos en la tabla productos
+INSERT INTO productos (nombre_producto, precio, stock)
+VALUES
+    ('Camiseta', 15.99, 100),
+    ('Pantalón', 29.99, 50),
+    ('Zapatillas', 49.99, 200);
+
+-- Insertar un pedido (para Juan Pérez)
+INSERT INTO pedidos (id_cliente, total)
+VALUES
+    (1, 75.97);  -- Pedido de Juan Pérez
+
+-- Insertar detalles del pedido para Juan Pérez
+INSERT INTO detalles_pedido (id_pedido, id_producto, cantidad, precio_unitario)
+VALUES
+    (1, 1, 2, 15.99), -- 2 Camisetas
+    (1, 2, 1, 29.99); -- 1 Pantalón
+
+-- Insertar otro pedido (para Ana García)
+INSERT INTO pedidos (id_cliente, total)
+VALUES
+    (2, 99.98);  -- Pedido de Ana García
+
+-- Insertar detalles del pedido para Ana García
+INSERT INTO detalles_pedido (id_pedido, id_producto, cantidad, precio_unitario)
+VALUES
+    (2, 1, 1, 15.99), -- 1 Camiseta
+    (2, 3, 2, 49.99); -- 2 Zapatillas
